@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 /**
  * Custom {@link KVDao} factory
@@ -54,6 +55,34 @@ final class KVDaoFactory {
         }
 
         // TODO: Implement me
-        throw new UnsupportedOperationException("Implement me!");
+        //throw new UnsupportedOperationException("Implement me!");
+        return new KVDao() {
+
+            @Override
+            public void close() throws IOException {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'close'");
+            }
+
+            @Override
+            public byte[] get(String key) throws NoSuchElementException, IOException {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'get'");
+            }
+
+            @Override
+            public void upsert(String key, byte[] value) throws IOException {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'upsert'");
+            }
+
+            @Override
+            public void remove(String key) throws IOException {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'remove'");
+            }
+            
+        };
+        
     }
 }

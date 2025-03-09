@@ -19,6 +19,8 @@ dependencies {
 
     // HTTP client for unit tests
     testCompile("org.apache.httpcomponents:fluent-hc:4.5.3")
+
+    implementation ("org.nanohttpd:nanohttpd:2.3.1")
 }
 
 tasks {

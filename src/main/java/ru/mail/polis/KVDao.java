@@ -27,13 +27,18 @@ import java.util.NoSuchElementException;
  *
  * @author Vadim Tsesko <incubos@yandex.com>
  */
+
+
+
+
+//  TODO: revert keys from string to bytes
 public interface KVDao extends Closeable {
     @NotNull
-    byte[] get(@NotNull byte[] key) throws NoSuchElementException, IOException;
+    byte[] get(@NotNull String key) throws NoSuchElementException, IOException;
 
     void upsert(
-            @NotNull byte[] key,
+            @NotNull String key,
             @NotNull byte[] value) throws IOException;
 
-    void remove(@NotNull byte[] key) throws IOException;
+    void remove(@NotNull String key) throws IOException;
 }

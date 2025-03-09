@@ -37,7 +37,7 @@ public final class Server {
 
         // Start the storage
         final KVDao dao = KVDaoFactory.create(data);
-        final KVService storage = KVServiceFactory.create(PORT, dao);
+        final KVService storage = KVServiceFactory.create(PORT, new MyDAO(data));
         storage.start();
         Runtime.getRuntime().addShutdownHook(
                 new Thread(() -> {
