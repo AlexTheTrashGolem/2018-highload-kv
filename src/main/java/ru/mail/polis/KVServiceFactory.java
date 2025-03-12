@@ -42,7 +42,7 @@ final class KVServiceFactory {
     @NotNull
     static KVService create(
             final int port,
-            @NotNull final MyDAO dao) throws IOException {
+            @NotNull final KVDao dao) throws IOException {
         if (Runtime.getRuntime().maxMemory() > MAX_HEAP) {
             throw new IllegalStateException("The heap is too big. Consider setting Xmx.");
         }

@@ -1,11 +1,13 @@
 package ru.mail.polis.Command;
 
 
+import java.nio.charset.StandardCharsets;
+
 import org.jetbrains.annotations.NotNull;
 
 public class KVCommandFactory {
     public static KVServiceCommand getCommand(String method, String query) {
-        String id = extractId(query);
+        byte[] id = extractId(query);
 
         switch (method) {
             case "GET":
@@ -19,11 +21,11 @@ public class KVCommandFactory {
         }
     }
 
-    private static String extractId(@NotNull final String query) {
+    private static byte[] extractId(@NotNull final String query) {
         final String PREFIX = "id=";
         if (!query.startsWith(PREFIX)) throw new IllegalArgumentException();
         final String id = query.substring(PREFIX.length());
         if (id.isEmpty()) throw new IllegalArgumentException();
-        return id;
+        return id.getBytes(StandardCharsets.UTF_8);
     }
 }

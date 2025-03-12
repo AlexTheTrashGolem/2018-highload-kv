@@ -8,9 +8,9 @@ import com.sun.net.httpserver.HttpExchange;
 import ru.mail.polis.KVDao;
 
 public abstract class KVServiceCommand {
-    protected String id; // Holds the extracted ID
+    protected byte[] id; // Holds the extracted ID
 
-    public KVServiceCommand(String id) {
+    public KVServiceCommand(byte[] id) {
         this.id = id;
     }
 

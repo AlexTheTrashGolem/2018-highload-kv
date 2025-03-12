@@ -10,7 +10,7 @@ import ru.mail.polis.KVDao;
 
 
 public class DeleteCommand extends KVServiceCommand {
-    public DeleteCommand(String id) {
+    public DeleteCommand(byte[] id) {
         super(id);
     }
 

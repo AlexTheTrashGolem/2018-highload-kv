@@ -1,11 +1,8 @@
 package ru.mail.polis;
 import com.sun.net.httpserver.HttpServer;
 
-import ru.mail.polis.Command.DeleteCommand;
-import ru.mail.polis.Command.GetCommand;
 import ru.mail.polis.Command.KVCommandFactory;
 import ru.mail.polis.Command.KVServiceCommand;
-import ru.mail.polis.Command.PutCommand;
 
 import com.sun.net.httpserver.HttpHandler;
 
@@ -40,7 +37,7 @@ public class KVServiceImplement implements KVService {
 
         this.dao = dao;
 
-        this.server.createContext("/v0/entity", new HttpHandler() {
+        this.server.createContext("/v0/entity", new ErrorHandler(new HttpHandler() {
             @Override
             public void handle(HttpExchange httpExchange) throws IOException {
                 String query = httpExchange.getRequestURI().getQuery();
@@ -59,7 +56,7 @@ public class KVServiceImplement implements KVService {
 
                 httpExchange.close();
             }
-         });
+         }));
 
     }
     @Override

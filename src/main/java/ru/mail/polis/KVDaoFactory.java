@@ -19,7 +19,14 @@ package ru.mail.polis;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.NoSuchElementException;
 
 /**
@@ -31,7 +38,7 @@ final class KVDaoFactory {
     private static final long MAX_HEAP = 128 * 1024 * 1024;
 
     private KVDaoFactory() {
-        // Not instantiatable
+        // Not instantiable
     }
 
     /**
@@ -54,35 +61,47 @@ final class KVDaoFactory {
             throw new IllegalArgumentException("Path is not a directory: " + data);
         }
 
-        // TODO: Implement me
-        //throw new UnsupportedOperationException("Implement me!");
-        return new KVDao() {
+        try (RandomAccessFile lockRAF = new RandomAccessFile(new File(data, "dao.lock"), "rw");
+             FileChannel lockChannel = lockRAF.getChannel();
+             FileLock lock = lockChannel.lock()) {
 
-            @Override
-            public void close() throws IOException {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'close'");
-            }
+            return new KVDao() {
+                @Override
+                public void close() throws IOException {
+                    lock.release();
+                    lockChannel.close();
+                    lockRAF.close();
+                }
 
-            @Override
-            public byte[] get(String key) throws NoSuchElementException, IOException {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'get'");
-            }
+                @Override
+                public byte[] get(@NotNull byte[] key) throws NoSuchElementException, IOException {
+                    File file = new File(data, encodeKey(key));
+                    if (!file.exists()) {
+                        throw new NoSuchElementException();
+                    }
+                    try (InputStream is = new FileInputStream(file)) {
+                        return is.readAllBytes();
+                    }
+                }
 
-            @Override
-            public void upsert(String key, byte[] value) throws IOException {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'upsert'");
-            }
+                @Override
+                public void upsert(@NotNull byte[] key, @NotNull byte[] value) throws IOException {
+                    try (OutputStream os = new FileOutputStream(new File(data, encodeKey(key)))) {
+                        os.write(value);
+                    }
+                }
 
-            @Override
-            public void remove(String key) throws IOException {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'remove'");
-            }
-            
-        };
-        
+                @Override
+                public void remove(@NotNull byte[] key) throws IOException {
+                    File file = new File(data, encodeKey(key));
+                    if (!file.delete() && file.exists()) {
+                        throw new IOException("Failed to delete file: " + file);
+                    }
+                }
+                private String encodeKey(byte[] key) {
+                    return new String(key); // Simple encoding, replace with Base64 or Hex if needed
+                }
+            };
+        }
     }
 }

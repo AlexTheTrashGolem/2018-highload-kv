@@ -10,7 +10,7 @@ import ru.mail.polis.KVDao;
 
 
 public class PutCommand extends KVServiceCommand {
-    public PutCommand(String id) {
+    public PutCommand(byte[] id) {
         super(id);
     }
 
